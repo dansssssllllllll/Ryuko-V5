@@ -1,0 +1,37 @@
+let userBalance = {};
+
+module.exports = {
+  getBalance: (userID) => userBalance[userID] || 0,
+  setBalance: (userID, amount) => userBalance[userID] = amount,
+  addBalance: (userID, amount) => userBalance[userID] = (userBalance[userID] || 0) + amount,
+  subtractBalance: (userID, amount) => userBalance[userID] = (userBalance[userID] || 0) - amount
+};
+
+
+However, if you want to persist data even after restarting the bot, consider using a JSON file:
+
+
+const fs = require('fs');
+const dbFile = './database.json';
+
+if (!fs.existsSync(dbFile)) {
+  fs.writeFileSync(dbFile, '{}');
+}
+
+let userBalance = JSON.parse(fs.readFileSync(dbFile));
+
+module.exports = {
+  getBalance: (userID) => userBalance[userID] || 0,
+  setBalance: (userID, amount) => {
+    userBalance[userID] = amount;
+    fs.writeFileSync(dbFile, JSON.stringify(userBalance));
+  },
+  addBalance: (userID, amount) => {
+    userBalance[userID] = (userBalance[userID] || 0) + amount;
+    fs.writeFileSync(dbFile, JSON.stringify(userBalance));
+  },
+  subtractBalance: (userID, amount) => {
+    userBalance[userID] = (userBalance[userID] || 0) - amount;
+    fs.writeFileSync(dbFile, JSON.stringify(userBalance));
+  }
+};

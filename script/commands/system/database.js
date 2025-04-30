@@ -1,5 +1,5 @@
 const fs = require('fs');
-const dbFile = './database.js';
+const dbFile = './database';
 
 if (!fs.existsSync(dbFile)) fs.writeFileSync(dbFile, '{}');
 
